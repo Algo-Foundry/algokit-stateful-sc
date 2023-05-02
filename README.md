@@ -1,45 +1,51 @@
-# algokit-stateful-sc
+# Stateful smart contract assignment
+In this assignment, you will be tasked to complete stateful smart contract for a game. When the contract is deployed, a monster with a fixed amount of health is created. Participating accounts can repeatedly attack the monster till it dies. The account that does the most damage gets rewarded with Algos. 
 
-This project has been generated using AlgoKit. See below for default getting started instructions.
+## Stateful contract
+Complete the code in `game_approval.py`. The smart contract should contain the following functions,
 
-# Setup
+### Initialization
+Creates a new monster with a specified amount of health (e.g. 5 to 50). The monster must have at least 5 health points. Also initialize the global state of the maximum damage dealt to 0. You should also prevent the player from making multiple opt in transactions.
 
-### Initial setup
+### Attack monster
+Reduces the monster's health by 2 if the monster's health is not 0. Contract will keep track of the player that does the most damage to that monster, as well as the maximum damage dealt. The player's local state should also keep track of the damage dealt to that monster.
 
-1. Clone this repository: `git clone {repository_url}`
-2. Install pre-requisites:
-   - If you have AlgoKit installed, run `algokit bootstrap poetry` within this folder;
-   - or:
-     - Install `Python` - [Link](https://www.python.org/downloads/): The minimum required version is `3.10`. Ensure you can execute `python -V` and get `3.10`+.
-     - Install `Poetry` - [Link](https://python-poetry.org/docs/#installation): The minimum required version is `1.2`. Ensure you can execute `poetry -V` and get `1.2`+.
-     - If you're not using PyCharm, then run `poetry install` in the root directory (this should set up `.venv` and also install all Python dependencies) - PyCharm will do this for you automatically on startup 🪄.
-3. Open the project and start debugging / developing via:
-   - VS Code
-     1. Open the repository root in VS Code
-     2. Install recommended extensions
-     3. Hit F5 (or whatever you have debug mapped to) and it should start running with breakpoint debugging.
-        (**NOTE:** The first time you run, VS Code may prompt you to select the Python Interpreter. Select python from the .venv path within this project)
-   - IDEA (e.g. PyCharm)
-     1. Open the repository root in the IDE
-     2. It should automatically detect it's a Poetry project and set up a Python interpreter and virtual environment.
-     3. Hit Shift+F9 (or whatever you have debug mapped to) and it should start running with breakpoint debugging.
-   - Other
-     1. Open the repository root in your text editor of choice
-     2. In a terminal run `poetry shell`
-     3. Run `python app.py` through your debugger of choice
+### Reward player
+Send 1 Algos to the player that does the most damage if the monster is dead. This function can only be accessed by the creator.
 
-### Subsequently
+## Contract deployment
+Complete the code in `scripts/deploy_game.js` to deploy contract and fund it with 1.1 Algos.
 
-1. If you update to the latest source code and there are new dependencies you will need to run `poetry install` again
-2. Follow step 3 above
+## Calling the smart contract
 
-# Tools
+### Opt-In
+Complete the code in `scripts/actions/optIn.js` so that `acc1` is able to participate as a game player.
 
-This project makes use of Python to build Algorand smart contracts. The following tools are in use:
+### Attack
+Complete the code in `scripts/actions/attack.js` so that `acc1` can peform an application call to perform attacks on the monster.
 
-- [Poetry](https://python-poetry.org/): Python packaging and dependency management.- [Black](https://github.com/psf/black): A Python code formatter.
-- [Ruff](https://github.com/charliermarsh/ruff): An extremely fast Python linter.
+### Reward
+Complete the code in `scripts/actions/reward.js` so that the smart contract can dispense reward to the player that does the most damage.
 
-- [mypy](https://mypy-lang.org/): Static type checker.
+## Hints
+1. The recipient of an inner transaction must be in the accounts array. This means that you will need to get the best player's address from the global state, process it (because it returns as base64 format) and pass it into the accounts array when rewarding the player.
 
-It has also been configured to have a productive dev experience out of the box in VS Code, see the [.vscode](./.vscode) folder.
+## Setup instructions
+
+### Install python packages via AlgoKit
+run `algokit bootstrap poetry` within this folder
+
+### Install JS packages
+run `yarn install`
+
+### Update environement variables
+1. Copy `.env.example` to `.env`
+2. Update Algorand Sandbox credentials in `.env` file
+3. Update accounts in `.env` file
+
+### Initialize virtual environment
+run `poetry shell`
+
+### Compile Contracts
+1. run `python game_approval.py`
+2. run `python game_clearstate.py`

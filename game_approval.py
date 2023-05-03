@@ -12,6 +12,7 @@ def game():
         Assert(monsterHealth >= Int(5)),
         App.globalPut(Bytes("Health"), monsterHealth),
         App.globalPut(Bytes("MaxDamage"), Int(0)),
+        App.globalPut(Bytes("Mvp"), Bytes("")),
         Return(Int(1)),
     )
 
